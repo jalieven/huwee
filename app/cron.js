@@ -52,13 +52,13 @@ const job = new CronJob({
   cronTime: `00 ${minuteCron} * * * *`,
   onTick: () => {
     const minute = minutesSinceHour(hourRange.start);
-    console.log('day minute', minute);
-    const startMinutes = (hourRange.start * 60);
+    const startMinutes = 0;
     const stopMinutes = (hourRange.stop * 60) - startMinutes;
-    if (minute < startMinutes) {
+    console.log('day minute', minute, startMinutes, stopMinutes);
+    if (minute < 0) {
       console.log('RELAX');
       run(WHITES.RELAX);
-    } else if (minute >= startMinutes && minute < stopMinutes) {
+    } else if (minute >= 0 && minute < stopMinutes) {
       const ct = mapRange([startMinutes, stopMinutes], [156, 447], minute);
       const b = mapRange([startMinutes, stopMinutes], [254, 144], minute);
       const h = mapRange([startMinutes, stopMinutes], [41432, 7688], minute);
@@ -68,7 +68,7 @@ const job = new CronJob({
       const color = [ct, b, h, s, x, y];
       console.log('COLOR', color);
       run(color);
-    } else if (minute > stopMinutes) {
+    } else if (minute >= stopMinutes) {
       console.log('RELAX');
       run(WHITES.RELAX);
     }
