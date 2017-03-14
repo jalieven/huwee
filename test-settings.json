@@ -2,7 +2,7 @@
   "app-token": "<your-app-token>",
   "jobs": {
     "test-kitchen-nightlight": {
-      "enabled": false,
+      "enabled": true,
       "light": "Kitchen",
       "type": "preset",
       "cron": "*/5 * * * * *",
@@ -39,7 +39,7 @@
       "transition-ms": 10000
     },
     "test-kitchen-gradient": {
-      "enabled": true,
+      "enabled": false,
       "light": "Kitchen",
       "type": "gradient",
       "cron": "*/2 * 21-23 * * *",

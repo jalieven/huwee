@@ -10,6 +10,7 @@ export const COLORS = {
 
 // format here is [ct, b, h, s, x, y] (TODO check if x and y aren't superfluous)
 export const PRESETS = {
+    STANDARD: [366, 254, 8418, 140, 0.4573, 0.41],
     ENERGIZE: [156, 254, 41432, 75, 0.3146, 0.3304],
     CONCENTRATE: [233, 254, 39391, 14, 0.3682, 0.3715],
     READ: [346, 254, 8595, 121, 0.4452, 0.4068],

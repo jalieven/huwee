@@ -14,10 +14,8 @@ export const mapGradient = (start, end) => {
     const startTime = moment().hour(start.time.hour).minute(start.time.minute).second(start.time.second);
     const endTime = moment().hour(end.time.hour).minute(end.time.minute).second(end.time.second);
     const secondsSinceStart = moment().diff(startTime, 'seconds');
-    console.log("secondsSinceStart", secondsSinceStart);
     const startSeconds = 0;
     const stopSeconds = endTime.diff(startTime, 'seconds');
-    console.log('stopSeconds', stopSeconds);
     if (secondsSinceStart > startSeconds && secondsSinceStart < stopSeconds) {
         console.log('startPreset ct', startPreset[0]);
         const ct = mapRange([startSeconds, stopSeconds], [startPreset[0], endPreset[0]], secondsSinceStart);
@@ -26,7 +24,6 @@ export const mapGradient = (start, end) => {
         const s = mapRange([startSeconds, stopSeconds], [startPreset[3], endPreset[3]], secondsSinceStart);
         const x = mapRange([startSeconds, stopSeconds], [startPreset[4], endPreset[4]], secondsSinceStart);
         const y = mapRange([startSeconds, stopSeconds], [startPreset[5], endPreset[5]], secondsSinceStart);
-        console.log('Gradient color', [ct, b, h, s, x, y]);
         return [ct, b, h, s, x, y];
     }
     return undefined;

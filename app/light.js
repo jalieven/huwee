@@ -78,8 +78,7 @@ class Light {
 
     * toColorBHS(lightId, transitionTime, ct, b, h, s, x, y) {
         const state = hue.lightState.create();
-        //.xy(x, y)
-        const colorState = state.transition(transitionTime).bri(b).hue(h).sat(s).ct(ct);
+        const colorState = state.transition(transitionTime).bri(b).hue(h).sat(s).xy(x, y).ct(ct);
         yield this.api.setLightState(lightId, colorState);
         yield delay(transitionTime);
     }
