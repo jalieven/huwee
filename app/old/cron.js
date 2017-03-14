@@ -3,7 +3,7 @@
 import co from 'co';
 import { CronJob } from 'cron';
 import moment from 'moment';
-import Alert from './alert';
+import Light from './light';
 
 const appKey = '<your_app_key>';
 
@@ -32,13 +32,12 @@ const minutesSinceHour = (hour) => {
 }
 
 const run = (color) => {
-  const alert = new Alert();
+  const light = new Light();
   co(function* () {
-      yield alert.init(appKey);
-      const state = yield alert.state();
-      const kitchenLight = state.lights['2'];
+      yield light.init(appKey);
+      const kitchenLight = yield light.state({ path: 'name', value: 'Kitchen' });
       console.log(JSON.stringify(kitchenLight, null, '\t'));
-      yield alert.toColorBHS(2, transitionMs, ...color);
+      yield light.toColorBHS(2, transitionMs, ...color);
       // yield alert.reset(2, 2000);
   }).then(() => {
       console.log('DONE');

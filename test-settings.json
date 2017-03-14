@@ -1,0 +1,67 @@
+{
+  "app-token": "<your-app-token>",
+  "jobs": {
+    "test-kitchen-nightlight": {
+      "enabled": false,
+      "light": "Kitchen",
+      "type": "preset",
+      "cron": "*/5 * * * * *",
+      "preset": "NIGHTLIGHT",
+      "transition-ms": 1000
+    },
+    "test-kitchen-relax": {
+      "enabled": false,
+      "light": "Kitchen",
+      "type": "preset",
+      "cron": "*/30 * * * * *",
+      "preset": "RELAX",
+      "transition-ms": 10000
+    },
+    "test-kitchen-color-loop": {
+      "enabled": false,
+      "light": "Kitchen",
+      "type": "color-loop",
+      "cron": "00 */1 * * * *",
+      "count": 1
+    },
+    "test-kitchen-off": {
+      "enabled": false,
+      "light": "Kitchen",
+      "type": "off",
+      "cron": "*/5 * * * * *",
+      "transition-ms": 10000
+    },
+    "test-kitchen-on": {
+      "enabled": false,
+      "light": "Kitchen",
+      "type": "on",
+      "cron": "*/5 * * * * *",
+      "transition-ms": 10000
+    },
+    "test-kitchen-gradient": {
+      "enabled": true,
+      "light": "Kitchen",
+      "type": "gradient",
+      "cron": "*/2 * 21-23 * * *",
+      "gradient": {
+        "start": {
+          "time": {
+            "hour": 22,
+            "minute": 2,
+            "second": 0
+          },
+          "preset": "ENERGIZE"
+        },
+        "end": {
+          "time": {
+            "hour": 22,
+            "minute": 3,
+            "second": 0
+          },
+          "preset": "NIGHTLIGHT"
+        }
+      },
+      "transition-ms": 1000
+    }
+  }
+}

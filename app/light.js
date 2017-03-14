@@ -1,5 +1,9 @@
 'use strict';
 
+import filter from 'lodash/filter';
+import get from 'lodash/get';
+import assign from 'lodash/assign';
+import reduce from 'lodash/reduce';
 import first from 'lodash/first';
 import range from 'lodash/range';
 
@@ -7,7 +11,7 @@ import hue from 'node-hue-api';
 
 const delay = (ms) => new Promise(resolve => setTimeout(() => resolve(true), ms));
 
-class Alert {
+class Light {
 
     * init(userToken) {
         this.userToken = userToken;
@@ -16,8 +20,28 @@ class Alert {
         this.api = new hue.HueApi(hostname, this.userToken);
     }
 
-    * state() {
-        return yield this.api.fullState();
+    * state(query) {
+        const fullState = yield this.api.fullState();
+        console.log('full', JSON.stringify(fullState, null, '\t'));
+        const lights = reduce(fullState.lights, (res, value, key) => {
+            res.push(assign(value, { key }));
+            return res;
+        }, []);
+        if (query && query.path && query.value) {
+            return filter(lights, light => get(light, query.path) === query.value);
+        } else {
+            return lights;
+        }
+    }
+
+    * getLightIds(names) {
+        const result = {};
+        for (let name of names) {
+            const lightState = yield this.state({ path: 'name', value: name });
+            const key = (first(lightState) || {}).key;
+            result[name] = key;
+        }
+        return result;
     }
 
     * longAlert(lightId, r, g, b) {
@@ -54,7 +78,8 @@ class Alert {
 
     * toColorBHS(lightId, transitionTime, ct, b, h, s, x, y) {
         const state = hue.lightState.create();
-        const colorState = state.transition(transitionTime).bri(b).hue(h).sat(s).xy(x, y).ct(ct);
+        //.xy(x, y)
+        const colorState = state.transition(transitionTime).bri(b).hue(h).sat(s).ct(ct);
         yield this.api.setLightState(lightId, colorState);
         yield delay(transitionTime);
     }
@@ -75,14 +100,26 @@ class Alert {
         yield this.reset(lightId, 200);
     }
 
-    * reset(lightId, msDelay) {
+    * off(lightId, transitionTime) {
+        const state = hue.lightState.create();
+        yield this.api.setLightState(lightId, state.off().transition(transitionTime));
+        yield delay(transitionTime);
+    }
+
+    * on(lightId, transitionTime) {
+        const state = hue.lightState.create();
+        yield this.api.setLightState(lightId, state.on().transition(transitionTime));
+        yield delay(transitionTime);
+    }
+
+    * reset(lightId, msDelay, msTransition = 2000) {
         const resetState = hue.lightState.create();
         if (msDelay) {
             yield delay(msDelay);
         }
-        yield this.api.setLightState(lightId, resetState.transition(2000).effect('none').xy(0.4573, 0.41).brightness(100));
+        yield this.api.setLightState(lightId, resetState.transition(msTransition).effect('none').xy(0.4573, 0.41).brightness(100));
     }
 
 }
 
-export default Alert;
+export default Light;

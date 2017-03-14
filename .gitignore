@@ -10,3 +10,4 @@ coverage/
 .nyc_output/
 dist/
 _ignore/
+settings.json

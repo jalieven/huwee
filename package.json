@@ -4,11 +4,10 @@
   "description": "Lighting programs for Philips Hue",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --compilers js:babel-core/register test/index.js",
     "clean": "rm -rf dist && mkdir dist",
     "build": "npm run clean && babel -d ./dist ./app -s",
-    "start": "npm run build && node dist/index.js",
-    "cron": "npm run build && node dist/cron.js"
+    "start": "npm run build && node dist/index.js"
   },
   "author": "Jan Lievens",
   "license": "ISC",
