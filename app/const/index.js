@@ -17,3 +17,11 @@ export const PRESETS = {
     RELAX: [447, 144, 7688, 199, 0.5014, 0.4153],
     NIGHTLIGHT: [153, 18, 2917, 218, 0.5964, 0.3563],
 };
+
+export const JOB_TYPES = {
+    ON: 'ON',
+    OFF: 'OFF',
+    PRESET: 'PRESET',
+    GRADIENT: 'GRADIENT',
+    COLORLOOP: 'COLORLOOP',
+};

@@ -1,7 +1,16 @@
 'use strict';
 
 import moment from 'moment';
-import { PRESETS } from '../const';
+import includes from 'lodash/includes';
+import isBoolean from 'lodash/isBoolean';
+import isEmpty from 'lodash/isEmpty';
+import isString from 'lodash/isString';
+import isNumber from 'lodash/isNumber';
+import keys from 'lodash/keys';
+import LysisChain from 'lysis/chain';
+import { not } from 'lysis/util';
+
+import { PRESETS, JOB_TYPES } from '../const';
 
 export const mapRange = (from, to, point) => {
 	return to[0] + (point - from[0]) * (to[1] - to[0]) / (from[1] - from[0]);
@@ -17,7 +26,6 @@ export const mapGradient = (start, end) => {
     const startSeconds = 0;
     const stopSeconds = endTime.diff(startTime, 'seconds');
     if (secondsSinceStart > startSeconds && secondsSinceStart < stopSeconds) {
-        console.log('startPreset ct', startPreset[0]);
         const ct = mapRange([startSeconds, stopSeconds], [startPreset[0], endPreset[0]], secondsSinceStart);
         const b = mapRange([startSeconds, stopSeconds], [startPreset[1], endPreset[1]], secondsSinceStart);
         const h = mapRange([startSeconds, stopSeconds], [startPreset[2], endPreset[2]], secondsSinceStart);
@@ -29,9 +37,27 @@ export const mapGradient = (start, end) => {
     return undefined;
 }
 
-// deprecated
-export const minutesSinceHour = (hour, minute) => {
-	const now = moment();
-	const hourOfTheDay = now.clone().hour(hour).minute(minute).second(0);
-	return now.diff(hourOfTheDay, 'minutes');
+export const validateSettings = settings => {
+    const mandatorySelectors = [
+        'app-token',
+        'jobs',
+        'jobs.*.enabled',
+        'jobs.*.light',
+        'jobs.*.type',
+        'jobs.*.cron'
+    ];
+    const validateJobTypes = type => includes(keys(JOB_TYPES), type);
+    const validateJobPresets = preset => includes(keys(PRESETS), preset);
+    return new LysisChain(settings)
+        .mandatory(mandatorySelectors)
+        .validate('jobs.*.enabled', isBoolean, `Job enabled must be a boolean.`)
+        .validate('jobs.*.type', validateJobTypes, `Invalid job type. Valid types are: ${keys(JOB_TYPES).join(', ')}`)
+        .validate('jobs.*.light', isString, `Job light must be a string.`)
+        .validate('jobs.*.light', not(isEmpty), `Job light can't be empty.`)
+        .validate('jobs.*.cron', isString, `Job cron must be a string.`)
+        .validate('jobs.*.cron', not(isEmpty), `Job cron can't be empty.`)
+        .validate('jobs.*.transition-ms', isNumber, `Job transition-ms must be a number.`)
+        .validate('jobs.*.preset', validateJobPresets, `Invalid job preset. Valid presets are: ${keys(PRESETS).join(', ')}`)
+        .errors();
 }
+

@@ -4,7 +4,7 @@ import Huwee from '../app/huwee';
 
 describe('Huwee', () => {
 
-	it('tests constructJobs', () => {
+	it.skip('tests constructJobs', () => {
 		const settings = {
 			TestOne: {
 				light: 'Kitchen',
@@ -13,7 +13,7 @@ describe('Huwee', () => {
 			},
 		};
 		const huwee = new Huwee(settings);
-		const jobs = huwee.constructJobs();
+		const jobs = huwee.bootstrapJobs();
 		console.log('-------jobs-------->', jobs);
 	});
 

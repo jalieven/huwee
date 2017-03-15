@@ -22,7 +22,7 @@ class Light {
 
     * state(query) {
         const fullState = yield this.api.fullState();
-        console.log('full', JSON.stringify(fullState, null, '\t'));
+        // console.log('full', JSON.stringify(fullState.lights, null, '\t'));
         const lights = reduce(fullState.lights, (res, value, key) => {
             res.push(assign(value, { key }));
             return res;
