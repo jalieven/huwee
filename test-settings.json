@@ -1,5 +1,7 @@
 {
   "app-token": "<your-app-token>",
+  "time-zone": "Europe/Brussels",
+  "transition-ms": 5000,
   "jobs": {
     "test-kitchen-nightlight": {
       "enabled": false,

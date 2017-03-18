@@ -1,6 +1,7 @@
 'use strict';
 
 import moment from 'moment';
+import has from 'lodash/has';
 import includes from 'lodash/includes';
 import isBoolean from 'lodash/isBoolean';
 import isEmpty from 'lodash/isEmpty';
@@ -8,9 +9,11 @@ import isString from 'lodash/isString';
 import isNumber from 'lodash/isNumber';
 import keys from 'lodash/keys';
 import LysisChain from 'lysis/chain';
-import { not } from 'lysis/util';
+import { not, or } from 'lysis/util';
 
 import { COLORS, PRESETS, JOB_TYPES } from '../const';
+
+export const delay = (ms) => new Promise(resolve => setTimeout(() => resolve(true), ms));
 
 export const mapRange = (from, to, point) => {
 	return to[0] + (point - from[0]) * (to[1] - to[0]) / (from[1] - from[0]);
@@ -43,18 +46,20 @@ export const validateSettings = settings => {
         'time-zone',
         'jobs',
         'jobs.*.enabled',
-        'jobs.*.light',
         'jobs.*.type',
         'jobs.*.cron'
     ];
     const validateJobTypes = type => includes(keys(JOB_TYPES), type);
     const validateJobPresets = preset => includes(keys(PRESETS), preset);
     const validateJobColor = color => includes(keys(COLORS), color);
+    const validateJobLight = job => has(job, 'light');
+    const validateJobGroup = job => has(job, 'group');
     return new LysisChain(settings)
         .mandatory(mandatorySelectors)
         .validate('app-token', isString, `App-token must be a string.`)
         .validate('time-zone', isString, `Time-zone must be a string.`)
         .validate('transition-ms', isNumber, `Default transition-ms must be a number.`)
+        .validate('jobs.*', or(validateJobLight, validateJobGroup), `Job must have property 'light' or 'group'.`)
         .validate('jobs.*.enabled', isBoolean, `Job enabled must be a boolean.`)
         .validate('jobs.*.type', validateJobTypes, `Invalid job type. Valid types are: ${keys(JOB_TYPES).join(', ')}`)
         .validate('jobs.*.light', isString, `Job light must be a string.`)

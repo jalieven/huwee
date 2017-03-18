@@ -1,6 +1,7 @@
 'use strict';
 
 import filter from 'lodash/filter';
+import includes from 'lodash/includes';
 import get from 'lodash/get';
 import assign from 'lodash/assign';
 import reduce from 'lodash/reduce';
@@ -9,9 +10,9 @@ import range from 'lodash/range';
 
 import hue from 'node-hue-api';
 
-const delay = (ms) => new Promise(resolve => setTimeout(() => resolve(true), ms));
+import { delay } from './util';
 
-class Light {
+class Lights {
 
     * init(userToken) {
         this.userToken = userToken;
@@ -21,32 +22,29 @@ class Light {
     }
 
     * state(query) {
-        const fullState = yield this.api.fullState();
-        // console.log('full', JSON.stringify(fullState.lights, null, '\t'));
-        const lights = reduce(fullState.lights, (res, value, key) => {
-            res.push(assign(value, { key }));
-            return res;
-        }, []);
+        const state = yield this.api.lights();
+        // console.log('full', JSON.stringify(state, null, '\t'));
         if (query && query.path && query.value) {
-            return filter(lights, light => get(light, query.path) === query.value);
+            return filter(state.lights, light => get(light, query.path) === query.value);
         } else {
-            return lights;
+            return state.lights;
         }
     }
 
     * getLightState(lightId) {
-        const fullState = yield this.api.fullState();
-        return (fullState.lights[lightId] || {}).state;
+        const light = yield this.state({ path: 'id', value: lightId });
+        return (first(light) || {}).state;
     }
 
     * getLightIds(names) {
-        const result = {};
-        for (let name of names) {
-            const lightState = yield this.state({ path: 'name', value: name });
-            const key = (first(lightState) || {}).key;
-            result[name] = key;
-        }
-        return result;
+        const lightsState = yield this.state();
+        return reduce(lightsState, (res, light) => {
+            if (includes(names, light.name)) {
+                return assign(res, { [light.name]: light.id });
+            } else {
+                return res;
+            }
+        }, {});
     }
 
     * longAlert(lightId, r, g, b) {
@@ -91,18 +89,17 @@ class Light {
         yield delay(transitionTime);
     }
 
-    * pulse(lightId, pulseTime, count, r1, g1, b1, r2, g2, b2) {
-        // TODO first fetch the state and reset to that state in stead of just resetting to STANDARD
+    * pulse(lightId, pulseTime, count, ct1, b1, h1, s1, x1, y1, ct2, b2, h2, s2, x2, y2) {
         const previousState = yield this.getLightState(lightId);
         const pulseState = hue.lightState.create();
         const runs = range(0, count);
         for (let run of runs) {
-            yield this.api.setLightState(lightId, pulseState.transition(pulseTime).rgb(r1, g1, b1).brightness(100));
+            yield this.api.setLightState(lightId, pulseState.transition(pulseTime).bri(b1).hue(h1).sat(s1).xy(x1, y1).ct(ct1));
             yield delay(pulseTime);
-            if (r1 && g2 && b2) {
-                yield this.api.setLightState(lightId, pulseState.transition(pulseTime).rgb(r2, g2, b2).brightness(100));
+            if (ct2 && b2 && h2 && s2 && x2 && y2) {
+                yield this.api.setLightState(lightId, pulseState.transition(pulseTime).bri(b2).hue(h2).sat(s2).xy(x2, y2).ct(ct2));
             } else {
-                yield this.api.setLightState(lightId, pulseState.transition(pulseTime).rgb(255, 255, 255).brightness(100));
+                yield this.api.setLightState(lightId, pulseState.transition(pulseTime).xy(0.4573, 0.41).brightness(100));
             }
             yield delay(pulseTime);
         }
@@ -136,4 +133,4 @@ class Light {
 
 }
 
-export default Light;
+export default Lights;
