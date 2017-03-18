@@ -16,13 +16,13 @@ export const mapRange = (from, to, point) => {
 	return to[0] + (point - from[0]) * (to[1] - to[0]) / (from[1] - from[0]);
 }
 
-export const mapGradient = (start, end) => {
-    const now = moment();
+export const mapGradient = (timeZone, start, end) => {
+    const now = moment().tz(timeZone);
     const startPreset = PRESETS[start.preset];
     const endPreset = PRESETS[end.preset];
-    const startTime = moment().hour(start.time.hour).minute(start.time.minute).second(start.time.second);
-    const endTime = moment().hour(end.time.hour).minute(end.time.minute).second(end.time.second);
-    const secondsSinceStart = moment().diff(startTime, 'seconds');
+    const startTime = moment().tz(timeZone).hour(start.time.hour).minute(start.time.minute).second(start.time.second);
+    const endTime = moment().tz(timeZone).hour(end.time.hour).minute(end.time.minute).second(end.time.second);
+    const secondsSinceStart = moment().tz(timeZone).diff(startTime, 'seconds');
     const startSeconds = 0;
     const stopSeconds = endTime.diff(startTime, 'seconds');
     if (secondsSinceStart > startSeconds && secondsSinceStart < stopSeconds) {

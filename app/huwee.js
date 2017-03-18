@@ -67,7 +67,7 @@ class Huwee {
 							case JOB_TYPES.GRADIENT: {
 								const start = setting.gradient.start;
 								const end = setting.gradient.end;
-								const gradientColor = mapGradient(start, end);
+								const gradientColor = mapGradient(that.settings['time-zone'], start, end);
 								if (gradientColor) {
 									log.info({ message: `Light '${setting.light}' with id '${lightId}' sliding on the gradient (${gradientColor})`});
 									yield that.light.toColorBHS(lightId, transitionTime, ...gradientColor);
