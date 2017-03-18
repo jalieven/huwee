@@ -76,6 +76,16 @@
         "from": "RED",
         "to": "GREEN"
       }
+    },
+    "test-kitchen-alert": {
+      "enabled": true,
+      "light": "Kitchen",
+      "type": "ALERT",
+      "cron": "*/30 * * * * *",
+      "alert": {
+        "type": "LONG",
+        "color": "GREEN"
+      }
     }
   }
 }
