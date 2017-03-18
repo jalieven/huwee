@@ -136,7 +136,6 @@ class Groups {
         }
         if (toState) {
             for (let light of toState) {
-                console.log('REVERT', toState);
                 const { ct, bri, sat, xy } = light.state;
                 yield this.api.setLightState(light.id, resetState.transition(msTransition).effect('none').bri(bri).hue(light.state.hue).sat(sat).xy(...xy).ct(ct));
             }

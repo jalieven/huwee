@@ -12,7 +12,7 @@ import forEach from 'lodash/forEach';
 import Lights from './lights';
 import Groups from './groups';
 import log from './log';
-import { COLORS, PRESETS, JOB_TYPES, ALERT_TYPES } from './const';
+import { PRESETS, JOB_TYPES, ALERT_TYPES } from './const';
 import { mapGradient, validateSettings } from './util';
 
 class Huwee {
@@ -109,35 +109,35 @@ class Huwee {
 							case JOB_TYPES.PULSE: {
 								const pulseTime = setting.pulse['pulse-duration-ms'];
 								const pulseCount = setting.pulse['count'];
-								const fromColor = setting.pulse['from'];
-								const toColor = setting.pulse['to'];
+								const fromPreset = setting.pulse['from'];
+								const toPreset = setting.pulse['to'];
 								if (lightId) {
-									log.info({ message: `Light '${setting.light}' with id '${lightId}' pulses ${pulseCount} times from color '${fromColor}' to color '${toColor}'`});
-									yield that.lights.pulse(lightId, pulseTime, pulseCount, ...COLORS[fromColor], ...COLORS[toColor]);
+									log.info({ message: `Light '${setting.light}' with id '${lightId}' pulses ${pulseCount} times from preset '${fromPreset}' to preset '${toPreset}'`});
+									yield that.lights.pulse(lightId, pulseTime, pulseCount, ...PRESETS[fromPreset], ...PRESETS[toPreset]);
 								}
 								if (groupId) {
-									log.info({ message: `Group '${setting.group}' with id '${groupId}' pulses ${pulseCount} times from color '${fromColor}' to color '${toColor}'`});
-									yield that.groups.pulse(groupId, pulseTime, pulseCount, ...COLORS[fromColor], ...COLORS[toColor]);
+									log.info({ message: `Group '${setting.group}' with id '${groupId}' pulses ${pulseCount} times from preset '${fromPreset}' to preset '${toPreset}'`});
+									yield that.groups.pulse(groupId, pulseTime, pulseCount, ...PRESETS[fromPreset], ...PRESETS[toPreset]);
 								}
 							}
 							case JOB_TYPES.ALERT: {
 								const alertType = setting.alert.type;
-								const color = setting.alert.color;
+								const preset = setting.alert.preset;
 								if (lightId) {
-									log.info({ message: `Light '${setting.light}' with id '${lightId}' alerts of type '${alertType}' with color '${color}'`});
+									log.info({ message: `Light '${setting.light}' with id '${lightId}' alerts of type '${alertType}' with preset '${preset}'`});
 									if (alertType === 'SHORT') {
-										console.log(COLORS[color]);
-										yield that.lights.shortAlert(lightId, ...COLORS[color]);
+										console.log(PRESETS[preset]);
+										yield that.lights.shortAlert(lightId, ...PRESETS[preset]);
 									} else if (alertType === 'LONG') {
-										yield that.lights.longAlert(lightId, ...COLORS[color]);
+										yield that.lights.longAlert(lightId, ...PRESETS[preset]);
 									}
 								}
 								if (groupId) {
-									log.info({ message: `Group '${setting.group}' with id '${groupId}' alerts of type '${alertType}' with color '${color}'`});
+									log.info({ message: `Group '${setting.group}' with id '${groupId}' alerts of type '${alertType}' with preset '${preset}'`});
 									if (alertType === 'SHORT') {
-										yield that.groups.shortAlert(groupId, ...COLORS[color]);
+										yield that.groups.shortAlert(groupId, ...PRESETS[preset]);
 									} else if (alertType === 'LONG') {
-										yield that.groups.longAlert(groupId, ...COLORS[color]);
+										yield that.groups.longAlert(groupId, ...PRESETS[preset]);
 									}
 								}
 							}

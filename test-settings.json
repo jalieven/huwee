@@ -84,7 +84,7 @@
       "cron": "*/30 * * * * *",
       "alert": {
         "type": "LONG",
-        "color": "GREEN"
+        "preset": "GREEN"
       }
     }
   }
