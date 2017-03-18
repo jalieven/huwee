@@ -47,18 +47,19 @@ class Lights {
         }, {});
     }
 
-    * longAlert(lightId, r, g, b) {
+    * longAlert(lightId, ct, b, h, s, x, y) {
         const previousState = yield this.getLightState(lightId);
         const state = hue.lightState.create();
-        yield this.api.setLightState(lightId, state.brightness(100).rgb(r, g, b));
+        yield this.api.setLightState(lightId, state.bri(b).hue(h).sat(s).xy(x, y).ct(ct));
+        yield delay(500);
         yield this.api.setLightState(lightId, state.longAlert());
         yield this.reset(2, 15000, previousState);
     }
 
-    * shortAlert(lightId, r, g, b) {
+    * shortAlert(lightId, ct, b, h, s, x, y) {
         const previousState = yield this.getLightState(lightId);
         const state = hue.lightState.create();
-        yield this.api.setLightState(lightId, state.ct(153).brightness(100).rgb(r, g, b));
+        yield this.api.setLightState(lightId, state.bri(b).hue(h).sat(s).xy(x, y).ct(ct));
         yield delay(500);
         yield this.api.setLightState(lightId, state.shortAlert());
         yield delay(500);
@@ -103,7 +104,7 @@ class Lights {
             }
             yield delay(pulseTime);
         }
-        yield this.reset(lightId, 200, previousState, pulseTime);
+        yield this.reset(lightId, 2000, previousState, pulseTime);
     }
 
     * off(lightId, transitionTime) {

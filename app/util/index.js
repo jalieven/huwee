@@ -11,7 +11,7 @@ import keys from 'lodash/keys';
 import LysisChain from 'lysis/chain';
 import { not, or } from 'lysis/util';
 
-import { COLORS, PRESETS, JOB_TYPES } from '../const';
+import { COLORS, PRESETS, JOB_TYPES, ALERT_TYPES } from '../const';
 
 export const delay = (ms) => new Promise(resolve => setTimeout(() => resolve(true), ms));
 
@@ -52,6 +52,7 @@ export const validateSettings = settings => {
     const validateJobTypes = type => includes(keys(JOB_TYPES), type);
     const validateJobPresets = preset => includes(keys(PRESETS), preset);
     const validateJobColor = color => includes(keys(COLORS), color);
+    const validateJobAlertTypes = type => includes(keys(ALERT_TYPES), type);
     const validateJobLight = job => has(job, 'light');
     const validateJobGroup = job => has(job, 'group');
     return new LysisChain(settings)
@@ -72,6 +73,7 @@ export const validateSettings = settings => {
         .validate('jobs.*.pulse.count', isNumber, `Pulse count must be a number.`)
         .validate('jobs.*.pulse.from', validateJobColor, `Invalid job color. Valid colors are: ${keys(COLORS).join(', ')}`)
         .validate('jobs.*.pulse.to', validateJobColor, `Invalid job color. Valid colors are: ${keys(COLORS).join(', ')}`)
+        .validate('jobs.*.alert.type', validateJobAlertTypes, `Invalid job alert type. Valid types are: ${keys(ALERT_TYPES).join(', ')}`)
         .errors();
 }
 

@@ -2,13 +2,14 @@
 
 // format here is [r, g, b]
 export const COLORS = {
-    // TODO CONVERT COLORS TO HSB
-    RED: [226, 27, 27],
-    GREEN: [27, 226, 27],
-    BLUE: [27, 27, 226],
-    YELLOW: [255, 234, 0],
-    PIE: [233, 254, 39391, 14, 0.3682, 0.3715],
-    POW: [153, 18, 2917, 218, 0.5964, 0.3563],
+    RED: [153, 254, 65084, 254, 0.6783, 0.3019],
+    GREEN: [153, 254, 24187, 254, 0.1988, 0.6784],
+    BLUE: [153, 254, 46014, 254, 0.154, 0.0806],
+    YELLOW: [375, 254, 11160, 254, 0.4641, 0.4791],
+    ORANGE: [153, 254, 5281, 254, 0.5839, 0.3891],
+    PINK: [500, 254, 60734, 254, 0.5513, 0.2404],
+    PURPLE: [153, 254, 52355, 228, 0.3141, 0.1479],
+    TURQUOISE: [153, 254, 39542, 250, 0.1626, 0.2786],
 };
 
 // format here is [ct, b, h, s, x, y] (TODO check if x and y aren't superfluous)
@@ -28,4 +29,10 @@ export const JOB_TYPES = {
     GRADIENT: 'GRADIENT',
     COLORLOOP: 'COLORLOOP',
     PULSE: 'PULSE',
+    ALERT: 'ALERT',
+};
+
+export const ALERT_TYPES = {
+    SHORT: 'SHORT',
+    LONG: 'LONG'
 };

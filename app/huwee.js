@@ -12,7 +12,7 @@ import forEach from 'lodash/forEach';
 import Lights from './lights';
 import Groups from './groups';
 import log from './log';
-import { COLORS, PRESETS, JOB_TYPES } from './const';
+import { COLORS, PRESETS, JOB_TYPES, ALERT_TYPES } from './const';
 import { mapGradient, validateSettings } from './util';
 
 class Huwee {
@@ -120,6 +120,27 @@ class Huwee {
 									yield that.groups.pulse(groupId, pulseTime, pulseCount, ...COLORS[fromColor], ...COLORS[toColor]);
 								}
 							}
+							case JOB_TYPES.ALERT: {
+								const alertType = setting.alert.type;
+								const color = setting.alert.color;
+								if (lightId) {
+									log.info({ message: `Light '${setting.light}' with id '${lightId}' alerts of type '${alertType}' with color '${color}'`});
+									if (alertType === 'SHORT') {
+										console.log(COLORS[color]);
+										yield that.lights.shortAlert(lightId, ...COLORS[color]);
+									} else if (alertType === 'LONG') {
+										yield that.lights.longAlert(lightId, ...COLORS[color]);
+									}
+								}
+								if (groupId) {
+									log.info({ message: `Group '${setting.group}' with id '${groupId}' alerts of type '${alertType}' with color '${color}'`});
+									if (alertType === 'SHORT') {
+										yield that.groups.shortAlert(groupId, ...COLORS[color]);
+									} else if (alertType === 'LONG') {
+										yield that.groups.longAlert(groupId, ...COLORS[color]);
+									}
+								}
+							}
 						}
 					})(this)
 					.then(() => {
@@ -138,6 +159,7 @@ class Huwee {
 			if (that.settings) {
 				that.lights = new Lights();
 				yield that.lights.init(that.settings['app-token']);
+				// console.log('STATE', JSON.stringify(yield that.lights.state(), null, '\t'));
 				that.groups = new Groups();
 				yield that.groups.init(that.settings['app-token']);
 				// const groupIds = yield that.groups.getGroupIds(['Kitchen', 'Leon Bedroom'])

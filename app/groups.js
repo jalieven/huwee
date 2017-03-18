@@ -57,18 +57,19 @@ class Groups {
         }, {});
     }
 
-    * longAlert(groupId, r, g, b) {
+    * longAlert(groupId, ct, b, h, s, x, y) {
         const previousState = yield this.getGroupState(groupId);
         const state = hue.lightState.create();
-        yield this.api.setGroupLightState(groupId, state.brightness(100).rgb(r, g, b));
+        yield this.api.setGroupLightState(groupId, state.bri(b).hue(h).sat(s).xy(x, y).ct(ct));
+        yield delay(500);
         yield this.api.setGroupLightState(groupId, state.longAlert());
         yield this.reset(2, 15000, previousState);
     }
 
-    * shortAlert(groupId, r, g, b) {
+    * shortAlert(groupId, ct, b, h, s, x, y) {
         const previousState = yield this.getGroupState(groupId);
         const state = hue.lightState.create();
-        yield this.api.setGroupLightState(groupId, state.ct(153).brightness(100).rgb(r, g, b));
+        yield this.api.setGroupLightState(groupId, state.bri(b).hue(h).sat(s).xy(x, y).ct(ct));
         yield delay(500);
         yield this.api.setGroupLightState(groupId, state.shortAlert());
         yield delay(500);
@@ -135,6 +136,7 @@ class Groups {
         }
         if (toState) {
             for (let light of toState) {
+                console.log('REVERT', toState);
                 const { ct, bri, sat, xy } = light.state;
                 yield this.api.setLightState(light.id, resetState.transition(msTransition).effect('none').bri(bri).hue(light.state.hue).sat(sat).xy(...xy).ct(ct));
             }
