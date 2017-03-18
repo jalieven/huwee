@@ -37,6 +37,7 @@ class Huwee {
 			return new CronJob({
 				cronTime: setting.cron,
 				start: setting.enabled,
+				timeZone: this.settings['time-zone'],
 				onTick: () => {
 					co.wrap(function* (that) {
 						log.info({ message: `Start job '${name}'...`});
