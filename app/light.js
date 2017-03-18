@@ -34,6 +34,11 @@ class Light {
         }
     }
 
+    * getLightState(lightId) {
+        const fullState = yield this.api.fullState();
+        return (fullState.lights[lightId] || {}).state;
+    }
+
     * getLightIds(names) {
         const result = {};
         for (let name of names) {
@@ -45,28 +50,31 @@ class Light {
     }
 
     * longAlert(lightId, r, g, b) {
+        const previousState = yield this.getLightState(lightId);
         const state = hue.lightState.create();
         yield this.api.setLightState(lightId, state.brightness(100).rgb(r, g, b));
         yield this.api.setLightState(lightId, state.longAlert());
-        yield this.reset(2, 15000);
+        yield this.reset(2, 15000, previousState);
     }
 
     * shortAlert(lightId, r, g, b) {
+        const previousState = yield this.getLightState(lightId);
         const state = hue.lightState.create();
         yield this.api.setLightState(lightId, state.ct(153).brightness(100).rgb(r, g, b));
         yield delay(500);
         yield this.api.setLightState(lightId, state.shortAlert());
         yield delay(500);
-        yield this.reset(2, 500);
+        yield this.reset(2, 500, previousState);
     }
 
     * colorloop(lightId, count) {
+        const previousState = yield this.getLightState(lightId);
         const runs = range(0, count);
         for (let run of runs) {
             yield this.api.setLightState(lightId, { effect: 'colorloop' });
             yield delay(20000);
         }
-        yield this.reset(lightId, 500);
+        yield this.reset(lightId, 500, previousState);
     }
 
     * toColorRGB(lightId, transitionTime, temp, brightness, r, g, b) {
@@ -84,6 +92,8 @@ class Light {
     }
 
     * pulse(lightId, pulseTime, count, r1, g1, b1, r2, g2, b2) {
+        // TODO first fetch the state and reset to that state in stead of just resetting to STANDARD
+        const previousState = yield this.getLightState(lightId);
         const pulseState = hue.lightState.create();
         const runs = range(0, count);
         for (let run of runs) {
@@ -96,7 +106,7 @@ class Light {
             }
             yield delay(pulseTime);
         }
-        yield this.reset(lightId, 200);
+        yield this.reset(lightId, 200, previousState, pulseTime);
     }
 
     * off(lightId, transitionTime) {
@@ -111,12 +121,17 @@ class Light {
         yield delay(transitionTime);
     }
 
-    * reset(lightId, msDelay, msTransition = 2000) {
+    * reset(lightId, msDelay, toState, msTransition = 1000) {
         const resetState = hue.lightState.create();
         if (msDelay) {
             yield delay(msDelay);
         }
-        yield this.api.setLightState(lightId, resetState.transition(msTransition).effect('none').xy(0.4573, 0.41).brightness(100));
+        if (toState) {
+            const { ct, bri, sat, xy } = toState;
+            yield this.api.setLightState(lightId, resetState.transition(msTransition).effect('none').bri(bri).hue(toState.hue).sat(sat).xy(...xy).ct(ct));
+        } else {
+            yield this.api.setLightState(lightId, resetState.transition(msTransition).effect('none').xy(0.4573, 0.41).brightness(100));
+        }
     }
 
 }

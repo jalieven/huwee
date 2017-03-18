@@ -2,9 +2,9 @@
   "app-token": "<your-app-token>",
   "jobs": {
     "test-kitchen-nightlight": {
-      "enabled": true,
+      "enabled": false,
       "light": "Kitchen",
-      "type": "preset",
+      "type": "PRESET",
       "cron": "*/5 * * * * *",
       "preset": "NIGHTLIGHT",
       "transition-ms": 1000
@@ -12,7 +12,7 @@
     "test-kitchen-relax": {
       "enabled": false,
       "light": "Kitchen",
-      "type": "preset",
+      "type": "PRESET",
       "cron": "*/30 * * * * *",
       "preset": "RELAX",
       "transition-ms": 10000
@@ -20,48 +20,60 @@
     "test-kitchen-color-loop": {
       "enabled": false,
       "light": "Kitchen",
-      "type": "color-loop",
+      "type": "COLORLOOP",
       "cron": "00 */1 * * * *",
       "count": 1
     },
     "test-kitchen-off": {
       "enabled": false,
       "light": "Kitchen",
-      "type": "off",
+      "type": "OFF",
       "cron": "*/5 * * * * *",
       "transition-ms": 10000
     },
     "test-kitchen-on": {
       "enabled": false,
       "light": "Kitchen",
-      "type": "on",
+      "type": "ON",
       "cron": "*/5 * * * * *",
       "transition-ms": 10000
     },
     "test-kitchen-gradient": {
       "enabled": false,
       "light": "Kitchen",
-      "type": "gradient",
+      "type": "GRADIENT",
       "cron": "*/2 * 21-23 * * *",
       "gradient": {
         "start": {
           "time": {
-            "hour": 22,
-            "minute": 2,
+            "hour": 21,
+            "minute": 0,
             "second": 0
           },
           "preset": "ENERGIZE"
         },
         "end": {
           "time": {
-            "hour": 22,
-            "minute": 3,
-            "second": 0
+            "hour": 23,
+            "minute": 59,
+            "second": 59
           },
           "preset": "NIGHTLIGHT"
         }
       },
       "transition-ms": 1000
+    },
+    "test-kitchen-pulse": {
+      "enabled": true,
+      "light": "Kitchen",
+      "type": "PULSE",
+      "cron": "15 * * * * *",
+      "pulse": {
+        "pulse-duration-ms": 1000,
+        "count": 5,
+        "from": "RED",
+        "to": "GREEN"
+      }
     }
   }
 }

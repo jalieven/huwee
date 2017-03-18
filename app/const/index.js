@@ -24,4 +24,5 @@ export const JOB_TYPES = {
     PRESET: 'PRESET',
     GRADIENT: 'GRADIENT',
     COLORLOOP: 'COLORLOOP',
+    PULSE: 'PULSE',
 };

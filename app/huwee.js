@@ -11,7 +11,7 @@ import forEach from 'lodash/forEach';
 
 import Light from './light';
 import log from './log';
-import { PRESETS, JOB_TYPES } from './const';
+import { COLORS, PRESETS, JOB_TYPES } from './const';
 import { mapGradient, validateSettings } from './util';
 
 class Huwee {
@@ -33,7 +33,7 @@ class Huwee {
 		const lightNames = uniq(values(mapValues(this.settings.jobs, 'light')));
 		const lightIds = yield this.light.getLightIds(lightNames);
 		return map(this.settings.jobs, (setting, name) => {
-			log.info({ message: `Bootstrapping job '${name}'`});
+			log.info({ message: `Bootstrapping job '${name}' [${setting.enabled ? 'ENABED' : 'DISABLED'}]`});
 			return new CronJob({
 				cronTime: setting.cron,
 				start: setting.enabled,
@@ -75,6 +75,14 @@ class Huwee {
 									log.warn({ message: `Gradient start and end setting for light ${setting.light} is inefficient, compare with cron setting plz...`});
 								}
 								break;
+							}
+							case JOB_TYPES.PULSE: {
+								const pulseTime = setting.pulse['pulse-duration-ms'];
+								const pulseCount = setting.pulse['count'];
+								const fromColor = setting.pulse['from'];
+								const toColor = setting.pulse['to'];
+								log.info({ message: `Light '${setting.light}' with id '${lightId}' pulses ${pulseCount} times from color '${fromColor}' to color '${toColor}'`});
+								yield that.light.pulse(lightId, pulseTime, pulseCount, ...COLORS[fromColor], ...COLORS[toColor]);
 							}
 						}
 					})(this)

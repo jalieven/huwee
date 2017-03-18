@@ -10,7 +10,7 @@ import keys from 'lodash/keys';
 import LysisChain from 'lysis/chain';
 import { not } from 'lysis/util';
 
-import { PRESETS, JOB_TYPES } from '../const';
+import { COLORS, PRESETS, JOB_TYPES } from '../const';
 
 export const mapRange = (from, to, point) => {
 	return to[0] + (point - from[0]) * (to[1] - to[0]) / (from[1] - from[0]);
@@ -49,6 +49,7 @@ export const validateSettings = settings => {
     ];
     const validateJobTypes = type => includes(keys(JOB_TYPES), type);
     const validateJobPresets = preset => includes(keys(PRESETS), preset);
+    const validateJobColor = color => includes(keys(COLORS), color);
     return new LysisChain(settings)
         .mandatory(mandatorySelectors)
         .validate('app-token', isString, `App-token must be a string.`)
@@ -62,6 +63,10 @@ export const validateSettings = settings => {
         .validate('jobs.*.cron', not(isEmpty), `Job cron can't be empty.`)
         .validate('jobs.*.transition-ms', isNumber, `Job transition-ms must be a number.`)
         .validate('jobs.*.preset', validateJobPresets, `Invalid job preset. Valid presets are: ${keys(PRESETS).join(', ')}`)
+        .validate('jobs.*.pulse.pulse-duration-ms', isNumber, `Pulse duration must be a number.`)
+        .validate('jobs.*.pulse.count', isNumber, `Pulse count must be a number.`)
+        .validate('jobs.*.pulse.from', validateJobColor, `Invalid job color. Valid colors are: ${keys(COLORS).join(', ')}`)
+        .validate('jobs.*.pulse.to', validateJobColor, `Invalid job color. Valid colors are: ${keys(COLORS).join(', ')}`)
         .errors();
 }
 
