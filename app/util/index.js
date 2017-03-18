@@ -40,6 +40,7 @@ export const mapGradient = (timeZone, start, end) => {
 export const validateSettings = settings => {
     const mandatorySelectors = [
         'app-token',
+        'time-zone',
         'jobs',
         'jobs.*.enabled',
         'jobs.*.light',
@@ -50,6 +51,9 @@ export const validateSettings = settings => {
     const validateJobPresets = preset => includes(keys(PRESETS), preset);
     return new LysisChain(settings)
         .mandatory(mandatorySelectors)
+        .validate('app-token', isString, `App-token must be a string.`)
+        .validate('time-zone', isString, `Time-zone must be a string.`)
+        .validate('transition-ms', isNumber, `Default transition-ms must be a number.`)
         .validate('jobs.*.enabled', isBoolean, `Job enabled must be a boolean.`)
         .validate('jobs.*.type', validateJobTypes, `Invalid job type. Valid types are: ${keys(JOB_TYPES).join(', ')}`)
         .validate('jobs.*.light', isString, `Job light must be a string.`)

@@ -42,7 +42,7 @@ class Huwee {
 					co.wrap(function* (that) {
 						log.info({ message: `Start job '${name}'...`});
 						const lightId = lightIds[setting.light];
-						const transitionTime = setting['transition-ms'] || 2000;
+						const transitionTime = setting['transition-ms'] || that.settings['transition-ms'];
 						switch(setting.type) {
 							case JOB_TYPES.PRESET: {
 								log.info({ message: `Light '${setting.light}' with id '${lightId}' to preset '${setting.preset}'`});
@@ -71,6 +71,8 @@ class Huwee {
 								if (gradientColor) {
 									log.info({ message: `Light '${setting.light}' with id '${lightId}' sliding on the gradient (${gradientColor})`});
 									yield that.light.toColorBHS(lightId, transitionTime, ...gradientColor);
+								} else {
+									log.warn({ message: `Gradient start and end setting for light ${setting.light} is inefficient, compare with cron setting plz...`});
 								}
 								break;
 							}
