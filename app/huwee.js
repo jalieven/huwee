@@ -159,12 +159,8 @@ class Huwee {
 			if (that.settings) {
 				that.lights = new Lights();
 				yield that.lights.init(that.settings['app-token']);
-				// console.log('STATE', JSON.stringify(yield that.lights.state(), null, '\t'));
 				that.groups = new Groups();
 				yield that.groups.init(that.settings['app-token']);
-				// const groupIds = yield that.groups.getGroupIds(['Kitchen', 'Leon Bedroom'])
-				// console.log('------>', groupIds);
-				// console.log('++++++>', yield that.groups.getGroupState(groupIds['Kitchen']));
 				const jobs = yield that.bootstrapJobs();
 			} else {
 				log.error('Failed to bootstrap jobs!');
