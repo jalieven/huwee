@@ -109,7 +109,7 @@ The following will turn the 'Dancehall' lights group into a party. It will run a
 Simply turn on/off the lights at a given time. In the example below it will turn on
 the 'Kitchen' light at 6 in the morning every weekday and turn it off at 23:00 in weekends.
 
-Javascript```
+```Javascript
 {
     ...
     "kitchen-on": {
@@ -132,7 +132,7 @@ Javascript```
 
 ### Pulse
 
-Javascript```
+```Javascript
 {
     ...
     "kids-room-pulse": {
@@ -158,7 +158,7 @@ This wakes up the kids at 7:30 with 20 pulses with a frequency of 1 second from 
 Another way to wake up the kids. This time it will dim the light at a certain frequency for
 a long or short period of time on a certain preset.
 
-Javascript```
+```Javascript
 {
     "kids-room-alert": {
       "enabled": true,
