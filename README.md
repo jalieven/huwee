@@ -90,7 +90,7 @@ be logged when you can optimize your gradient start and end times.
 
 The following will turn the 'Dancehall' lights group into a party. It will run a colorloop every minute.
 
-Javascript```
+```Javascript
 {
     ...
     "dancehall-color-loop": {
