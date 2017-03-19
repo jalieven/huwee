@@ -18,9 +18,10 @@ class Registrar {
         return this.api.registerUser(this.hostname, appDescription);
     }
 
-    * generateSettings(appToken, lightName, defaultTransitionTime, timeZone) {
+    * generateSettings(appToken, logFile, lightName, defaultTransitionTime, timeZone) {
         const settings = {
             'app-token': appToken,
+            'log-file': logFile,
             'transition-ms': defaultTransitionTime,
             'time-zone': timeZone,
             jobs: {
@@ -57,7 +58,7 @@ class Registrar {
         co.wrap(function* (that) {
             yield that.init();
             const appToken = yield that.registerApp(input.appDescription);
-            yield that.generateSettings(appToken, input.lightName, input.defaultTransitionTime, input.timeZone);
+            yield that.generateSettings(appToken, input.logFile, input.lightName, input.defaultTransitionTime, input.timeZone);
         })(this)
         .then(() => {
             console.log('All done! Now check and modify the generated settings.json. Then run "npm start".');
@@ -81,6 +82,12 @@ const questions = [
         name: 'lightName',
         message: 'What is the name your the light?',
         default: 'Kitchen',
+    },
+    {
+        type: 'input',
+        name: 'logFile',
+        message: 'Where do you want Huwee to write its log?',
+        default: '/tmp/huwee.log',
     },
     {
         type: 'input',

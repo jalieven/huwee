@@ -5,7 +5,7 @@ Lighting programs for Philips Hue
 
 Since the Hue lights don't retain their scene settings between hardware switches Huwee can
 run cron jobs to set different scenes according to the hour. This way you can still use the
-hardware switch without losing the scene settingss.
+hardware switch without losing the scene settings.
 It was initially conceived to make the lights follow a gradient over time (white-blue light
 in the morning, dim red light before sleep) to optimize the sleep related hormone melatonin.
 
@@ -15,7 +15,7 @@ First install the dependencies: 'npm install'.
 Huwee requires a settings.json to function which contains the different jobs, app-token, etc.
 To register your app and generate a simple settings.json simply run: 'npm start register'.
 Answer the questions and at the end click on your Hue bridge link button. After this a settings.json
-will be generated in the root of this project. See the test-settings.json for different types of jobs.
+will be generated in the root of this project.
 
 ## Types of jobs
 

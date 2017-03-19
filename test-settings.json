@@ -1,5 +1,6 @@
 {
   "app-token": "<your-app-token>",
+  "log-file": "/tmp/huwee.log",
   "time-zone": "Europe/Brussels",
   "transition-ms": 5000,
   "jobs": {
