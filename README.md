@@ -13,8 +13,8 @@ in the morning, dim red light before sleep) to optimize the sleep related hormon
 
 First install the dependencies: 'npm install'.
 Huwee requires a settings.json to function which contains the different jobs, app-token, etc.
-To register your app and generate a simple settings.json simply run: 'npm start register'.
-Answer the questions and at the end click on your Hue bridge link button. After this a settings.json
+To register your app with your Hue bridge and generate a simple settings.json simply run: 'npm start register'.
+Answer the questions and at the end of the questionaire click on your Hue bridge link button. After this a settings.json
 will be generated in the root of this project.
 
 ## Types of jobs
@@ -29,7 +29,7 @@ The preset job makes sure a preset is enforced every time your Hue light is swit
 In this case it will set the light to the 'NIGHTLIGHT' preset each 10 seconds from midnight up until 6 in the morning.
 So when switching on your light with your hardware switch at night will at worst give off 10 seconds of
 'unbearable' white light (the preset which you can't configure for Hue lights) after which it will
-transform into a very dim yellow light.
+transform in one second into a very dim yellow light.
 
 ```Javascript
 {
